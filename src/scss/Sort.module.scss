@@ -1,0 +1,7 @@
+svg {
+  transition: transform 0.3s ease;
+}
+
+svg.rotate {
+  transform: rotate(180deg);
+}
