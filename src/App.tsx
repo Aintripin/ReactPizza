@@ -42,30 +42,29 @@ const App = () => {
     <div className="wrapper">
       <Header />
       <div className="content">
-        <div className="container">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          {/* <div className="content__top">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        {/* <div className="content__top">
             <Categories />
             {Sort()}
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items"> */}
-          {/* {isLoading
+        {/* {isLoading
               ? [...new Array(8)].map((_, idx) => <PizzaSkeleton key={idx} />)
               : items.map((pizzaItem: PizzaItem) => (
                   <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
                 ))} */}
-          {/* {items.map((pizzaItem: PizzaItem) => (
+        {/* {items.map((pizzaItem: PizzaItem) => (
               <PizzaSkeleton key={pizzaItem.id} {...pizzaItem} />
             ))} */}
-          {/* {items.map((pizzaItem: PizzaItem) => (
+        {/* {items.map((pizzaItem: PizzaItem) => (
               <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
             ))} */}
-          {/* {pizzas.map((pizzaObj, idx) => (
+        {/* {pizzas.map((pizzaObj, idx) => (
               <PizzaBlock
                 key={idx}
                 {...pizzaObj}
@@ -79,15 +78,14 @@ const App = () => {
                 // rating={pizzaObj.rating}
               />
             ))} */}
-          {/* <PizzaBlock title="Мексиканская" price="345" />
+        {/* <PizzaBlock title="Мексиканская" price="345" />
             {PizzaBlock({
               title: "BBQ",
               price: "449",
             })}
             <PizzaBlock />
             <PizzaBlock /> */}
-          {/* </div> */}
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

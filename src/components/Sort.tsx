@@ -1,15 +1,28 @@
 import { useState } from "react";
 import styles from "../scss/Sort.module.scss";
 
-function Sort() {
+function Sort({ chosenSortOption, onClickSortOption }) {
   const [open, setOpen] = useState<boolean>(false);
-  const [optionActive, setOptionActive] = useState<number>(0);
-  const sortByOptions = ["популярности", "цене", "алфавиту"];
+  // const [optionActive, setOptionActive] = useState<number>(0);
+  // const sortByOptions = ["популярности", "цене", "алфавиту"];
+  const sortByOptions = [
+    { optionName: "популярности (DESC)", sortProperty: "rating" },
+    { optionName: "популярности (ASC)", sortProperty: "-rating" },
+    { optionName: "цене (DESC)", sortProperty: "price" },
+    { optionName: "цене (ASC)", sortProperty: "-price" },
+    { optionName: "алфавиту (DESC)", sortProperty: "title" },
+    { optionName: "алфавиту (ASC)", sortProperty: "-title" },
+  ];
 
-  const sortByDisplay = sortByOptions[optionActive];
+  // const sortByDisplay = sortByOptions[optionActive];
+  // const sortByDisplay = sortByOptions[chosenSortOption].optionName;
+  // const sortByDisplay =
+  //   sortByOptions.find((option) => option.sortProperty === chosenSortOption)
+  //     ?.optionName || "популярности";
 
-  const handleOptionPick = (idx: number) => {
-    setOptionActive(idx);
+  const handleOptionPick = (sortObject) => {
+    // setOptionActive(idx);
+    onClickSortOption(sortObject);
     setOpen(false);
   };
 
@@ -30,18 +43,25 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sortByDisplay}</span>
+        <span onClick={() => setOpen(!open)}>
+          {chosenSortOption.optionName}
+        </span>
       </div>
       {open && (
         <div className="sort__popup">
           <ul>
-            {sortByOptions.map((el, idx) => (
+            {sortByOptions.map((sortObject, idx) => (
               <li
                 key={idx}
-                onClick={() => handleOptionPick(idx)}
-                className={optionActive === idx ? "active" : ""}
+                onClick={() => handleOptionPick(sortObject)}
+                // onClick={() => onClickSortOption(sortByOptions[idx])}
+                className={
+                  chosenSortOption.sortProperty === sortObject.sortProperty
+                    ? "active"
+                    : ""
+                }
               >
-                {el}
+                {sortObject.optionName}
               </li>
             ))}
           </ul>
