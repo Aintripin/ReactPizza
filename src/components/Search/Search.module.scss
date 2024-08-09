@@ -1,0 +1,45 @@
+.root {
+  position: relative;
+  //   left: -120px;
+}
+
+.input {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 20px;
+  padding-left: 42px;
+  width: 350px;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: all 0.3s ease-out;
+
+  &:focus {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 400px;
+  }
+}
+
+.icon_magnifyingGlass {
+  width: 22px;
+  height: 22px;
+  opacity: 0.3;
+  position: absolute;
+  left: 14px;
+  top: 12px;
+}
+
+.icon_XMark {
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  opacity: 0.3;
+  position: absolute;
+  right: 8px;
+  top: 2px;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+  //   border: 1px solid red;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

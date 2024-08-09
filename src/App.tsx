@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import PizzaBlock from "./components/PizzaBlock/PizzaBlock";
 import Sort from "./components/Sort";
 import pizzas from "./assets/pizzas.json";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PizzaSkeleton from "./components/PizzaBlock/Skeleton";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
@@ -21,7 +21,13 @@ export type PizzaItem = {
   rating: number;
 };
 
+export const SearchContext = React.createContext();
+
+console.log(SearchContext);
+
 const App = () => {
+  const [searchValue, setSearchValue] = useState("");
+
   // console.log(typeof pizzas[0].imageUrl);
 
   // const [items, setItems] = useState<PizzaItem[]>([]);
@@ -40,31 +46,33 @@ const App = () => {
 
   return (
     <div className="wrapper">
-      <Header />
-      <div className="content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        {/* <div className="content__top">
+      <SearchContext.Provider value={{ searchValue, setSearchValue }}>
+        {/* <Header searchValue={searchValue} setSearchValue={setSearchValue} /> */}
+        <Header />
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Home searchValue={searchValue} />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          {/* <div className="content__top">
             <Categories />
             {Sort()}
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items"> */}
-        {/* {isLoading
+          {/* {isLoading
               ? [...new Array(8)].map((_, idx) => <PizzaSkeleton key={idx} />)
               : items.map((pizzaItem: PizzaItem) => (
                   <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
                 ))} */}
-        {/* {items.map((pizzaItem: PizzaItem) => (
+          {/* {items.map((pizzaItem: PizzaItem) => (
               <PizzaSkeleton key={pizzaItem.id} {...pizzaItem} />
             ))} */}
-        {/* {items.map((pizzaItem: PizzaItem) => (
+          {/* {items.map((pizzaItem: PizzaItem) => (
               <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
             ))} */}
-        {/* {pizzas.map((pizzaObj, idx) => (
+          {/* {pizzas.map((pizzaObj, idx) => (
               <PizzaBlock
                 key={idx}
                 {...pizzaObj}
@@ -78,15 +86,16 @@ const App = () => {
                 // rating={pizzaObj.rating}
               />
             ))} */}
-        {/* <PizzaBlock title="Мексиканская" price="345" />
+          {/* <PizzaBlock title="Мексиканская" price="345" />
             {PizzaBlock({
               title: "BBQ",
               price: "449",
             })}
             <PizzaBlock />
             <PizzaBlock /> */}
-        {/* </div> */}
-      </div>
+          {/* </div> */}
+        </div>
+      </SearchContext.Provider>
     </div>
   );
 };

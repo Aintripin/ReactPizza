@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
-import { PizzaItem } from "../App";
+import React, { useEffect, useState } from "react";
+import { PizzaItem, SearchContext } from "../App";
 import Categories from "../components/Categories";
 import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
 import Sort from "../components/Sort";
 import PizzaSkeleton from "../components/PizzaBlock/Skeleton";
+import Pagination from "../components/Pagination";
 
 const Home = () => {
+  const { searchValue } = React.useContext(SearchContext);
   const [items, setItems] = useState<PizzaItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categoryId, setCategoryId] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [chosenSortOption, setChosenSortOption] = useState({
     optionName: "популярности",
     sortProperty: "rating",
@@ -22,6 +25,7 @@ const Home = () => {
     const sortBy = chosenSortOption.sortProperty.replace("-", "");
     const order = chosenSortOption.sortProperty.includes("-") ? "asc" : "desc";
     const category = categoryId > 0 ? `category=${categoryId}` : "";
+    const search = searchValue ? `&search=${searchValue}` : "";
 
     setTimeout(() => {
       fetch(
@@ -31,16 +35,40 @@ const Home = () => {
         //   "-",
         //   ""
         // )}&order=${order}`
-        `https://66b082be6a693a95b538f92c.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}`
+        `https://66b082be6a693a95b538f92c.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
       )
         .then((res) => res.json())
         .then((fetchedStuff) => {
-          setItems(fetchedStuff);
+          if (Array.isArray(fetchedStuff)) {
+            setItems(fetchedStuff);
+          } else {
+            console.error("Unexpected response format:", fetchedStuff);
+            setItems([]);
+          }
           setIsLoading(false);
         });
       window.scrollTo(0, 0);
     }, 1000);
-  }, [categoryId, chosenSortOption]);
+  }, [categoryId, chosenSortOption, searchValue, currentPage]);
+
+  const skeletonPlaceholders = [...new Array(8)].map((_, idx) => (
+    <PizzaSkeleton key={idx} />
+  ));
+
+  // const pizzas = items
+  //   .filter((obj) => {
+  //     if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+  //       return true;
+  //     }
+  //     return false;
+  //   })
+  //   .map((pizzaItem: PizzaItem) => (
+  //     <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
+  //   ));
+
+  const pizzas = items.map((pizzaItem: PizzaItem) => (
+    <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
+  ));
 
   return (
     <div className="container">
@@ -60,12 +88,9 @@ const Home = () => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
-        {isLoading
-          ? [...new Array(8)].map((_, idx) => <PizzaSkeleton key={idx} />)
-          : items.map((pizzaItem: PizzaItem) => (
-              <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
-            ))}
+        {isLoading ? skeletonPlaceholders : pizzas}
       </div>
+      <Pagination onChangePage={(number) => setCurrentPage(number)} />
     </div>
   );
 };
