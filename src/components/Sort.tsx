@@ -1,7 +1,12 @@
 import { useState } from "react";
 import styles from "../scss/Sort.module.scss";
+import { UseSelector, useDispatch, useSelector } from "react-redux";
+import { setSort } from "../redux/slices/filterSlice";
 
-function Sort({ chosenSortOption, onClickSortOption }) {
+function Sort() {
+  const dispatch = useDispatch();
+  const sort = useSelector((state) => state.filter.sort);
+
   const [open, setOpen] = useState<boolean>(false);
   // const [optionActive, setOptionActive] = useState<number>(0);
   // const sortByOptions = ["популярности", "цене", "алфавиту"];
@@ -26,6 +31,11 @@ function Sort({ chosenSortOption, onClickSortOption }) {
     setOpen(false);
   };
 
+  const onCliclListItem = (obj) => {
+    dispatch(setSort);
+    setOpen(false);
+  };
+
   return (
     <div className="sort">
       <div className="sort__label">
@@ -43,9 +53,7 @@ function Sort({ chosenSortOption, onClickSortOption }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>
-          {chosenSortOption.optionName}
-        </span>
+        <span onClick={() => setOpen(!open)}>{sort.optionName}</span>
       </div>
       {open && (
         <div className="sort__popup">
@@ -56,9 +64,7 @@ function Sort({ chosenSortOption, onClickSortOption }) {
                 onClick={() => handleOptionPick(sortObject)}
                 // onClick={() => onClickSortOption(sortByOptions[idx])}
                 className={
-                  chosenSortOption.sortProperty === sortObject.sortProperty
-                    ? "active"
-                    : ""
+                  sort.sortProperty === sortObject.sortProperty ? "active" : ""
                 }
               >
                 {sortObject.optionName}

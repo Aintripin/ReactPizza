@@ -6,24 +6,41 @@ import Sort from "../components/Sort";
 import PizzaSkeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 
+import { useDispatch, useSelector } from "react-redux";
+import { setCategoryId } from "../redux/slices/filterSlice";
+
 const Home = () => {
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.filter.categoryId);
+
+  const sortType = useSelector((state) => state.filter.sort.sortProperty);
+
+  console.log("redux state:", categoryId);
+
+  // const setCategoryId = () => {};
+
   const { searchValue } = React.useContext(SearchContext);
   const [items, setItems] = useState<PizzaItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [categoryId, setCategoryId] = useState<number>(0);
+  // const [categoryId, setCategoryId] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [chosenSortOption, setChosenSortOption] = useState({
     optionName: "популярности",
     sortProperty: "rating",
   });
 
-  console.log(categoryId, chosenSortOption.sortProperty);
+  const onChangeCategory = (id) => {
+    // console.log(id);
+    dispatch(setCategoryId(id));
+  };
+
+  // console.log(categoryId, chosenSortOption.sortProperty);
 
   useEffect(() => {
     setIsLoading(true);
 
-    const sortBy = chosenSortOption.sortProperty.replace("-", "");
-    const order = chosenSortOption.sortProperty.includes("-") ? "asc" : "desc";
+    const sortBy = sortType.replace("-", "");
+    const order = sortType.includes("-") ? "asc" : "desc";
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
@@ -76,15 +93,17 @@ const Home = () => {
       <div className="content__top">
         <Categories
           chosenCategoryId={categoryId}
-          onClickCategory={(id) => setCategoryId(id)}
+          // onClickCategory={(id) => setCategoryId(id)}
+          onClickCategory={onChangeCategory}
           // onClickCategory={setCategoryId}
         />
-        <Sort
+        {/* <Sort
           chosenSortOption={chosenSortOption}
           onClickSortOption={(sortOptionObj) => {
             setChosenSortOption(sortOptionObj);
           }}
-        />
+        /> */}
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
