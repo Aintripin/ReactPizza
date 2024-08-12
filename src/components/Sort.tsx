@@ -1,28 +1,28 @@
 import { useState } from "react";
 import styles from "../scss/Sort.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { setSort } from "../redux/slices/filterSlice";
 
-function Sort({ chosenSortOption, onClickSortOption }) {
+const sortByOptions = [
+  { name: "популярности (DESC)", sortProperty: "rating" },
+  { name: "популярности (ASC)", sortProperty: "-rating" },
+  { name: "цене (DESC)", sortProperty: "price" },
+  { name: "цене (ASC)", sortProperty: "-price" },
+  { name: "алфавиту (DESC)", sortProperty: "title" },
+  { name: "алфавиту (ASC)", sortProperty: "-title" },
+];
+
+function Sort() {
+  const dispatch = useDispatch();
+  const sort = useSelector((state: RootState) => state.filter.sort);
+
   const [open, setOpen] = useState<boolean>(false);
-  // const [optionActive, setOptionActive] = useState<number>(0);
-  // const sortByOptions = ["популярности", "цене", "алфавиту"];
-  const sortByOptions = [
-    { optionName: "популярности (DESC)", sortProperty: "rating" },
-    { optionName: "популярности (ASC)", sortProperty: "-rating" },
-    { optionName: "цене (DESC)", sortProperty: "price" },
-    { optionName: "цене (ASC)", sortProperty: "-price" },
-    { optionName: "алфавиту (DESC)", sortProperty: "title" },
-    { optionName: "алфавиту (ASC)", sortProperty: "-title" },
-  ];
 
-  // const sortByDisplay = sortByOptions[optionActive];
-  // const sortByDisplay = sortByOptions[chosenSortOption].optionName;
-  // const sortByDisplay =
-  //   sortByOptions.find((option) => option.sortProperty === chosenSortOption)
-  //     ?.optionName || "популярности";
-
-  const handleOptionPick = (sortObject) => {
-    // setOptionActive(idx);
-    onClickSortOption(sortObject);
+  const onClickListItem = (obj) => {
+    // console.log("CLICKED");
+    // console.log(obj);
+    dispatch(setSort(obj));
     setOpen(false);
   };
 
@@ -43,9 +43,7 @@ function Sort({ chosenSortOption, onClickSortOption }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>
-          {chosenSortOption.optionName}
-        </span>
+        <span onClick={() => setOpen(!open)}>{sort.name}</span>
       </div>
       {open && (
         <div className="sort__popup">
@@ -53,15 +51,12 @@ function Sort({ chosenSortOption, onClickSortOption }) {
             {sortByOptions.map((sortObject, idx) => (
               <li
                 key={idx}
-                onClick={() => handleOptionPick(sortObject)}
-                // onClick={() => onClickSortOption(sortByOptions[idx])}
+                onClick={() => onClickListItem(sortObject)}
                 className={
-                  chosenSortOption.sortProperty === sortObject.sortProperty
-                    ? "active"
-                    : ""
+                  sort.sortProperty === sortObject.sortProperty ? "active" : ""
                 }
               >
-                {sortObject.optionName}
+                {sortObject.name}
               </li>
             ))}
           </ul>
