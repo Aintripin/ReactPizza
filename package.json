@@ -18,6 +18,7 @@
     "heroicons": "^2.1.5",
     "lodash-es": "^4.17.21",
     "lodash.debounce": "^4.0.8",
+    "qs": "^6.13.0",
     "react": "^18.3.1",
     "react-content-loader": "^7.0.2",
     "react-dom": "^18.3.1",
@@ -27,6 +28,7 @@
     "use-debounce": "^10.0.2"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.15.0",
