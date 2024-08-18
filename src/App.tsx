@@ -23,7 +23,7 @@ export type PizzaItem = {
 
 export const SearchContext = React.createContext();
 
-console.log(SearchContext);
+// console.log(SearchContext);
 
 const App = () => {
   const [searchValue, setSearchValue] = useState("");

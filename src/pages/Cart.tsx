@@ -1,6 +1,28 @@
 import { Link } from "react-router-dom";
+import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import CartItem from "../components/CartItem";
+import { RootState } from "../redux/store";
+import { clearItems } from "../redux/slices/cartSlice";
+import CartEmpty from "../components/CartEmpty";
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  // fetching all the pizzas from the state
+  // const items = useSelector((state: RootState) => state.cart.items);
+  const { totalPrice, items } = useSelector((state: RootState) => state.cart);
+
+  const onClickClear = () => {
+    if (window.confirm("Yo, you really tryna wipe out the stash?")) {
+      dispatch(clearItems());
+    }
+  };
+
+  const totalItemsCount = items.reduce((sum, item) => sum + item.count, 0);
+
+  if (!totalPrice) {
+    return <CartEmpty />;
+  }
+
   return (
     <div className="container container--cart">
       <div className="cart">
@@ -37,10 +59,8 @@ const Cart = () => {
             </svg>
             Корзина
           </h2>
-          <div
-            // onClick={onClickClear}
-            className="cart__clear"
-          >
+          <div onClick={onClickClear} className="cart__clear">
+            {/* trash can SVG */}
             <svg
               width="20"
               height="20"
@@ -77,28 +97,25 @@ const Cart = () => {
                 strokeLinejoin="round"
               ></path>
             </svg>
+            {/* /trashcan SVG */}
 
             <span>Очистить корзину</span>
           </div>
         </div>
         <div className="content__items">
-          {/* {items.map((item: any) => (
-          <CartItem key={item.id} {...item} />
-        ))} */}
+          {items.map((item) => {
+            return <CartItem key={item.id} item={item} />;
+          })}
         </div>
         <div className="cart__bottom">
           <div className="cart__bottom-details">
             <span>
               {" "}
-              Всего пицц:{" "}
-              <b>
-                {/* {totalCount}  */}
-                шт.
-              </b>{" "}
+              Всего пицц: <b>{`${totalItemsCount} шт.`}</b>{" "}
             </span>
             <span>
               {" "}
-              Сумма заказа: <b>{/* {totalPrice}  */}₽</b>{" "}
+              Сумма заказа: <b>{`${totalPrice} ₽`}</b>{" "}
             </span>
           </div>
           <div className="cart__bottom-buttons">

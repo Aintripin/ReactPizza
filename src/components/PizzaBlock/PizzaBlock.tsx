@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PizzaItem } from "../../App";
+import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { addItem } from "../../redux/slices/cartSlice";
 
 // interface PizzaBlockProps extends Omit<PizzaItem, "id"> {
 //   //   title?: string;
@@ -8,6 +10,9 @@ import { PizzaItem } from "../../App";
 //   //   sizes: number[];
 //   //   types: number[];
 // }
+
+const typeNames = ["тонкое", "традиционное"];
+const sizeNames = [26, 30, 40];
 
 interface PizzaBlockProps
   extends Omit<PizzaItem, "id" | "title">,
@@ -27,21 +32,46 @@ interface PizzaBlockProps
 //     React.HTMLAttributes<HTMLDivElement> {}
 
 const PizzaBlock: React.FC<PizzaBlockProps> = ({
+  id,
   title,
   price,
   imageUrl,
   sizes,
   types,
 }: PizzaBlockProps) => {
-  const [pizzaCount, setPizzaCount] = useState<number>(0);
-  const [activeSize, setActiveSize] = useState<number>(0);
-  const [doughType, setDoughType] = useState<number>(0);
+  // console.log("recieved ID:", id);
+  // console.log("the whole object:", id, title, price, imageUrl, sizes, types);
+  const dispatch = useDispatch();
+  const cartItem = useSelector((state) =>
+    state.cart.items.find((obj) => obj.id === id)
+  );
 
-  const addPizza = () => {
-    setPizzaCount(pizzaCount + 1);
-  };
+  useEffect(() => {
+    console.log("cartItem: ", cartItem);
+  }, [cartItem]);
+
+  const [doughType, setDoughType] = useState<number>(0);
+  const [activeSize, setActiveSize] = useState<number>(0);
+
+  // console.log(cartItem);
+
+  const addedCount = cartItem ? cartItem.count : 0;
 
   //   console.log(imageUrl);
+
+  const onClickAdd = () => {
+    const item = {
+      id,
+      title,
+      price,
+      imageUrl,
+      type: typeNames[doughType],
+      size: sizeNames[activeSize],
+      count: 1,
+    };
+    dispatch(addItem(item));
+    // console.error("item ", item, "has been passed down to dipatch");
+  };
 
   return (
     <div className="pizza-block-wrapper">
@@ -82,7 +112,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
           </div>
           <button
             className="button button--outline button--add"
-            onClick={addPizza}
+            onClick={onClickAdd}
           >
             <svg
               width="12"
@@ -97,7 +127,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
               />
             </svg>
             <span>Добавить</span>
-            <i>{pizzaCount}</i>
+            {addedCount > 0 && <i>{addedCount}</i>}
           </button>
         </div>
       </div>
