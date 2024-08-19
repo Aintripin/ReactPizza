@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PizzaItem } from "../../App";
 import { useDispatch, UseDispatch, useSelector } from "react-redux";
-import { addItem } from "../../redux/slices/cartSlice";
+import { addItem, selectCartItemById } from "../../redux/slices/cartSlice";
 
 // interface PizzaBlockProps extends Omit<PizzaItem, "id"> {
 //   //   title?: string;
@@ -42,9 +42,10 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   // console.log("recieved ID:", id);
   // console.log("the whole object:", id, title, price, imageUrl, sizes, types);
   const dispatch = useDispatch();
-  const cartItem = useSelector((state) =>
-    state.cart.items.find((obj) => obj.id === id)
-  );
+  // const cartItem = useSelector((state) =>
+  //   state.cart.items.find((obj) => obj.id === id)
+  // );
+  const cartItem = useSelector(selectCartItemById(id));
 
   useEffect(() => {
     console.log("cartItem: ", cartItem);

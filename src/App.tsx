@@ -9,6 +9,8 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import { Route, Routes } from "react-router-dom";
 import Cart from "./pages/Cart";
+import { useSelector } from "react-redux";
+import { selectSearchValue } from "./redux/slices/filterSlice";
 
 export type PizzaItem = {
   id: number;
@@ -21,26 +23,26 @@ export type PizzaItem = {
   rating: number;
 };
 
-export const SearchContext = React.createContext();
+// export const SearchContext = React.createContext();
 
 // console.log(SearchContext);
 
 const App = () => {
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
+
+  const searchValue = useSelector(selectSearchValue);
 
   return (
     <div className="wrapper">
-      <SearchContext.Provider value={{ searchValue, setSearchValue }}>
-        {/* <Header searchValue={searchValue} setSearchValue={setSearchValue} /> */}
-        <Header />
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Home searchValue={searchValue} />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </SearchContext.Provider>
+      {/* <Header searchValue={searchValue} setSearchValue={setSearchValue} /> */}
+      <Header />
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Home searchValue={searchValue} />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </div>
   );
 };
