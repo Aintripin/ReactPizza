@@ -3,7 +3,7 @@ import qs from "qs";
 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // ?
 import Categories from "../components/Categories";
@@ -15,6 +15,7 @@ import Pagination from "../components/Pagination";
 
 // import {selectFilter}
 import {
+  FilterSliceState,
   selectFilter,
   setCategoryId,
   setCurrentPage,
@@ -28,29 +29,24 @@ import { sortList } from "../components/Sort";
 import { RootState } from "../redux/store";
 import {
   fetchPizzas,
+  FetchPizzasParams,
   selectPizzaData,
   setItems,
 } from "../redux/slices/pizzasSlice";
 import { AppDispatch } from "../redux/store";
 import CartEmpty from "../components/CartEmpty";
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const isSearch = React.useRef(false);
-  const isMounted = React.useRef(false);
+  const isSearch = React.useRef<boolean>(false);
+  const isMounted = React.useRef<boolean>(false);
 
   // extracting pizzas from Redux
-  // const { items, status } = useSelector((state) => state.pizzas);
   const { items, status } = useSelector(selectPizzaData);
-  // const { categoryId, sort, currentPage } = useSelector(
-  //   (state: RootState) => state.filter
-  // );
   const { categoryId, sort, currentPage, searchValue } =
     useSelector(selectFilter);
 
-  // const { searchValue } = React.useContext(SearchContext);
-  // const [items, setItems] = useState<PizzaItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const onChangeCategory = React.useCallback((id: number) => {
@@ -69,22 +65,6 @@ const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
 
-    // await axios
-    //   .get(
-    //     `https://66b082be6a693a95b538f92c.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    //   )
-    //   .then((response) => {
-    //     setItems(response.data);
-    //     // console.log("FETCHED ITEMS:", response.data);
-    //     setIsLoading(false);
-    //   });
-
-    // try {
-    // const { data } = await axios.get(
-    //   `https://66b082be6a693a95b538f92c.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    // );
-    // dispatch(setItems(data));
-
     // no need for the 'try/catch/finally/ block anymore as we're making a request to the API using 'fetchPizzas' that already handles all that logic
     dispatch(
       fetchPizzas({
@@ -95,12 +75,6 @@ const Home = () => {
         currentPage,
       })
     );
-    // } catch (err) {
-    //   console.log("!ERROR!: ", err);
-    // }
-    // finally {
-    //   setIsLoading(false);
-    // }
   };
 
   React.useEffect(() => {
@@ -118,13 +92,25 @@ const Home = () => {
 
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = qs.parse(
+        window.location.search.substring(1)
+      ) as unknown as FetchPizzasParams;
 
-      const sort = sortList.find(
-        (obj) => obj.sortProperty === params.sortProperty
+      const sort = sortList.find((obj) => obj.sortProperty === params.sortBy);
+
+      // if (sort) {
+      //   params.sortBy = sort;
+      // }
+
+      // dispatch(setFilters({ ...params, sort }));
+      dispatch(
+        setFilters({
+          searchValue: params.search,
+          categoryId: Number(params.category),
+          currentPage: Number(params.currentPage),
+          sort: sort || sortList[0],
+        })
       );
-
-      dispatch(setFilters({ ...params, sort }));
       isSearch.current = true;
     }
   }, []);
@@ -140,7 +126,7 @@ const Home = () => {
   }, [categoryId, sort?.sortProperty, searchValue, currentPage]);
 
   const pizzas = items.map((pizzaItem: PizzaItem) => (
-    <PizzaBlock key={pizzaItem.id} {...pizzaItem} />
+    <PizzaBlock {...pizzaItem} key={pizzaItem.id} />
   ));
 
   const skeletonPlaceholders = [...new Array(8)].map((_, idx) => (
@@ -154,7 +140,6 @@ const Home = () => {
         <Categories
           chosenCategoryId={categoryId}
           onChangeCategory={onChangeCategory}
-          // onClickCategory={setCategoryId}
         />
         <Sort />
       </div>

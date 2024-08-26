@@ -1,16 +1,24 @@
 import React from "react";
 
-function Categories({ chosenCategoryId, onChangeCategory }) {
-  const [activeIndex, setActiveIndex] = React.useState<number>(0);
+interface CategoriesProps {
+  chosenCategoryId: number;
+  onChangeCategory: (i: number) => void;
+}
 
-  const pizzaCategories = [
-    "Все",
-    "Мясные",
-    "Вегетарианские",
-    "Гриль",
-    "Острые",
-    "Закрытые",
-  ];
+const pizzaCategories = [
+  "Все",
+  "Мясные",
+  "Вегетарианские",
+  "Гриль",
+  "Острые",
+  "Закрытые",
+];
+
+const Categories: React.FC<CategoriesProps> = ({
+  chosenCategoryId,
+  onChangeCategory,
+}) => {
+  const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
   return (
     <div className="categories">
@@ -27,6 +35,6 @@ function Categories({ chosenCategoryId, onChangeCategory }) {
       </ul>
     </div>
   );
-}
+};
 
 export default Categories;

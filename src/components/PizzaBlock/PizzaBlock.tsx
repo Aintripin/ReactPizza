@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import { PizzaItem } from "../../App";
-import { useDispatch, UseDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem, selectCartItemById } from "../../redux/slices/cartSlice";
-
-// interface PizzaBlockProps extends Omit<PizzaItem, "id"> {
-//   //   title?: string;
-//   //   price?: number;
-//   //   imageUrl: string;
-//   //   sizes: number[];
-//   //   types: number[];
-// }
+import { Link } from "react-router-dom";
 
 const typeNames = ["тонкое", "традиционное"];
 const sizeNames = [26, 30, 40];
@@ -21,16 +14,6 @@ interface PizzaBlockProps
   id: number;
 }
 
-// interface PizzaBlockProps
-//   extends Omit<PizzaItem, "id" | "title">,
-//     React.HTMLAttributes<HTMLDivElement> {
-//   title: string;
-// }
-
-// interface PizzaBlockProps
-//   extends Omit<PizzaItem, "id">,
-//     React.HTMLAttributes<HTMLDivElement> {}
-
 const PizzaBlock: React.FC<PizzaBlockProps> = ({
   id,
   title,
@@ -39,12 +22,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   sizes,
   types,
 }: PizzaBlockProps) => {
-  // console.log("recieved ID:", id);
-  // console.log("the whole object:", id, title, price, imageUrl, sizes, types);
   const dispatch = useDispatch();
-  // const cartItem = useSelector((state) =>
-  //   state.cart.items.find((obj) => obj.id === id)
-  // );
   const cartItem = useSelector(selectCartItemById(id));
 
   useEffect(() => {
@@ -54,11 +32,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   const [doughType, setDoughType] = useState<number>(0);
   const [activeSize, setActiveSize] = useState<number>(0);
 
-  // console.log(cartItem);
-
   const addedCount = cartItem ? cartItem.count : 0;
-
-  //   console.log(imageUrl);
 
   const onClickAdd = () => {
     const item = {
@@ -71,16 +45,18 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
       count: 1,
     };
     dispatch(addItem(item));
-    // console.error("item ", item, "has been passed down to dipatch");
   };
 
   return (
     <div className="pizza-block-wrapper">
       <div className="pizza-block">
-        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
-        <h4 className="pizza-block__title">
-          {title ? title : "Чизбургер-пицца"}
-        </h4>
+        <Link to={`/pizza/${id}`}>
+          <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+
+          <h4 className="pizza-block__title">
+            {title ? title : "Чизбургер-пицца"}
+          </h4>
+        </Link>
         <div className="pizza-block__selector">
           <ul>
             {types.map((type, idx) => (

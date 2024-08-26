@@ -2,36 +2,41 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../scss/Sort.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { selectSort, setSort } from "../redux/slices/filterSlice";
+import {
+  selectSort,
+  setSort,
+  Sort,
+  SortPropertyEnum,
+} from "../redux/slices/filterSlice";
 
-export const sortList = [
-  { name: "популярности (DESC)", sortProperty: "rating" },
-  { name: "популярности (ASC)", sortProperty: "-rating" },
-  { name: "цене (DESC)", sortProperty: "price" },
-  { name: "цене (ASC)", sortProperty: "-price" },
-  { name: "алфавиту (DESC)", sortProperty: "title" },
-  { name: "алфавиту (ASC)", sortProperty: "-title" },
+type SortItem = {
+  name: string;
+  sortProperty: SortPropertyEnum;
+};
+
+export const sortList: SortItem[] = [
+  { name: "популярности (DESC)", sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: "популярности (ASC)", sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: "цене (DESC)", sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: "цене (ASC)", sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: "алфавиту (DESC)", sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: "алфавиту (ASC)", sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-function Sort() {
+function SortPopup() {
   const dispatch = useDispatch();
-  // const sort = useSelector((state: RootState) => state.filter.sort);
   const sort = useSelector(selectSort);
   const sortRef = useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const onClickListItem = (obj) => {
-    // console.log("CLICKED");
-    // console.log(obj);
+  const onClickListItem = (obj: SortItem) => {
     dispatch(setSort(obj));
     setOpen(false);
   };
 
-  // console.log("sortRef", sortRef);
-
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: React.MouseEvent<HTMLBodyElement>) => {
       if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
@@ -40,7 +45,6 @@ function Sort() {
     document.body.addEventListener("click", handleClickOutside);
 
     return () => {
-      // console.log("Sort Unmounted");
       document.body.removeEventListener("click", handleClickOutside);
     };
   }, []);
@@ -85,4 +89,4 @@ function Sort() {
   );
 }
 
-export default Sort;
+export default SortPopup;

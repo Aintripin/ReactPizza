@@ -3,14 +3,16 @@ import Header from "./components/Header";
 import PizzaBlock from "./components/PizzaBlock/PizzaBlock";
 import Sort from "./components/Sort";
 import pizzas from "./assets/pizzas.json";
-import React, { useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 import PizzaSkeleton from "./components/PizzaBlock/Skeleton";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Cart from "./pages/Cart";
 import { useSelector } from "react-redux";
 import { selectSearchValue } from "./redux/slices/filterSlice";
+import FullPizza from "./pages/FullPizza";
+import MainLayout from "./layouts/MainLayout";
 
 export type PizzaItem = {
   id: number;
@@ -33,17 +35,14 @@ const App = () => {
   const searchValue = useSelector(selectSearchValue);
 
   return (
-    <div className="wrapper">
-      {/* <Header searchValue={searchValue} setSearchValue={setSearchValue} /> */}
-      <Header />
-      <div className="content">
-        <Routes>
-          <Route path="/" element={<Home searchValue={searchValue} />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route path="" element={<Home searchValue={searchValue} />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="pizza/:id" element={<FullPizza />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 };
 

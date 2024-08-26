@@ -12,12 +12,26 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { MinusIcon } from "@heroicons/react/16/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
-const CartItem = ({ item }) => {
+interface CartItemProps {
+  item: {
+    id: number;
+    title: string;
+    price: number;
+    imageUrl: string;
+    type: string;
+    size: number;
+    count: number;
+  };
+}
+
+const CartItemBlock: React.FC<CartItemProps> = ({ item }) => {
+  console.log("item count: ", item.count);
+
   const dispatch = useDispatch();
 
   const onClickPlus = () => {
     dispatch(
-      plusItem({
+      addItem({
         id: item.id,
         title: item.title,
         price: item.price,
@@ -55,13 +69,14 @@ const CartItem = ({ item }) => {
         </p>
       </div>
       <div className="cart__item-count">
-        <div
+        <button
+          disabled={item.count === 1}
           onClick={onClickMinus}
           className="button button--outline button--circle cart__item-count-minus"
         >
           –{/* <MinusIcon /> */}
           {/* //? won't render? */}
-        </div>
+        </button>
         <b>{item.count}</b>
         <div
           onClick={onClickPlus}
@@ -89,4 +104,4 @@ const CartItem = ({ item }) => {
   );
 };
 
-export default CartItem;
+export default CartItemBlock;

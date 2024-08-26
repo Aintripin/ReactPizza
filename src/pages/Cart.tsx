@@ -5,10 +5,9 @@ import { RootState } from "../redux/store";
 import { clearItems } from "../redux/slices/cartSlice";
 import CartEmpty from "../components/CartEmpty";
 
-const Cart = () => {
+const Cart: React.FC = () => {
   const dispatch = useDispatch();
   // fetching all the pizzas from the state
-  // const items = useSelector((state: RootState) => state.cart.items);
   const { totalPrice, items } = useSelector((state: RootState) => state.cart);
 
   const onClickClear = () => {
@@ -22,6 +21,8 @@ const Cart = () => {
   if (!totalPrice) {
     return <CartEmpty />;
   }
+
+  console.log("totalPrice: ", totalPrice);
 
   return (
     <div className="container container--cart">

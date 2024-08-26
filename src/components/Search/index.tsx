@@ -12,14 +12,11 @@ import {
 const Search = () => {
   const dispatch = useDispatch();
   const searchValue = useSelector(selectSearchValue);
-  // console.log("searchValue :", searchValue);
-  // const { searchValue, setSearchValue } = React.useContext(SearchContext);
   const [value, setValue] = React.useState<string>(searchValue); // local state for the search value
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const onClickClear = () => {
     setValue("");
-    // setSearchValue("");
     dispatch(setSearchValue(""));
     if (inputRef.current) {
       inputRef.current.focus();
