@@ -15,7 +15,8 @@ export interface FetchPizzasParams {
   // sortBy: Sort;
   sortBy: string;
   order: string;
-  category: string;
+  // category: string;
+  category: number;
   search: string;
   currentPage: number;
 }
