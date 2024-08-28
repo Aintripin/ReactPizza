@@ -26,7 +26,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
   const cartItem = useSelector(selectCartItemById(id));
 
   useEffect(() => {
-    console.log("cartItem: ", cartItem);
+    // console.log("cartItem: ", cartItem);
   }, [cartItem]);
 
   const [doughType, setDoughType] = useState<number>(0);

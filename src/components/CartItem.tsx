@@ -1,16 +1,15 @@
 import { useDispatch } from "react-redux";
-import {
-  addItem,
-  minusItem,
-  plusItem,
-  removeItem,
-} from "../redux/slices/cartSlice";
 
 // heroicons
 import { PlusIcon } from "@heroicons/react/24/outline";
 // import { MinusIcon } from "@heroicons/react/24/outline";
 import { MinusIcon } from "@heroicons/react/16/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import clsx from "clsx";
+
+// ? Styles:
+import styles from "./styles/CartItem.module.scss";
+import { addItem, minusItem, removeItem } from "../redux/slices/cart/slice";
 
 interface CartItemProps {
   item: {
@@ -25,7 +24,7 @@ interface CartItemProps {
 }
 
 const CartItemBlock: React.FC<CartItemProps> = ({ item }) => {
-  console.log("item count: ", item.count);
+  // console.log("item count: ", item.count);
 
   const dispatch = useDispatch();
 
@@ -72,7 +71,11 @@ const CartItemBlock: React.FC<CartItemProps> = ({ item }) => {
         <button
           disabled={item.count === 1}
           onClick={onClickMinus}
-          className="button button--outline button--circle cart__item-count-minus"
+          // className="button button--outline button--circle cart__item-count-minus"
+          className={clsx(
+            "button button--outline button--circle cart__item-count-minus",
+            { [styles.cartItemCountMinusDisabled]: item.count === 1 }
+          )}
         >
           –{/* <MinusIcon /> */}
           {/* //? won't render? */}

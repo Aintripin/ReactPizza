@@ -1,18 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../scss/Sort.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import {
-  selectSort,
-  setSort,
-  Sort,
-  SortPropertyEnum,
-} from "../redux/slices/filterSlice";
+import { Sort, SortPropertyEnum } from "../redux/slices/filter/types";
+import { setSort } from "../redux/slices/filter/slice";
+
+// import { useWhyDidYouUpdate } from "ahooks";
 
 type SortItem = {
   name: string;
   sortProperty: SortPropertyEnum;
 };
+
+interface SortPopupProps {
+  sort: Sort;
+}
 
 export const sortList: SortItem[] = [
   { name: "популярности (DESC)", sortProperty: SortPropertyEnum.RATING_DESC },
@@ -23,10 +25,14 @@ export const sortList: SortItem[] = [
   { name: "алфавиту (ASC)", sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-function SortPopup() {
+const SortPopup: React.FC<SortPopupProps> = React.memo(({ sort }) => {
+  // useWhyDidYouUpdate("SortPopup", { sort });
+
   const dispatch = useDispatch();
-  const sort = useSelector(selectSort);
+  // const sort = useSelector(selectSort);
   const sortRef = useRef<HTMLDivElement>(null);
+
+  // console.log("SortPopup re-render!");
 
   const [open, setOpen] = useState<boolean>(false);
 
@@ -87,6 +93,6 @@ function SortPopup() {
       )}
     </div>
   );
-}
+});
 
 export default SortPopup;

@@ -1,0 +1,33 @@
+.cartItemCountMinusDisabled {
+  opacity: 0.5; // Make the button appear disabled
+  cursor: not-allowed; // Change cursor to not-allowed
+
+  // Tooltip style
+  position: relative;
+
+  &:hover {
+    cursor: not-allowed;
+  }
+
+  &::after {
+    // content: "You've hit the rock bottom!";
+    content: "You tryna starve yourself? No can do!";
+    position: absolute;
+    bottom: -30px; // Adjust depending on your layout
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover::after {
+    opacity: 1; // Show the tooltip on hover
+  }
+}

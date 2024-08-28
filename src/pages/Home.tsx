@@ -14,27 +14,20 @@ import Pagination from "../components/Pagination";
 // ?
 
 // import {selectFilter}
-import {
-  FilterSliceState,
-  selectFilter,
-  setCategoryId,
-  setCurrentPage,
-  setFilters,
-} from "../redux/slices/filterSlice";
+
+
 import { SearchContext } from "../App";
 
 // ! types or whatever else is here:
 import { PizzaItem } from "../App";
 import { sortList } from "../components/Sort";
 import { RootState } from "../redux/store";
-import {
-  fetchPizzas,
-  FetchPizzasParams,
-  selectPizzaData,
-  setItems,
-} from "../redux/slices/pizzasSlice";
 import { AppDispatch } from "../redux/store";
 import CartEmpty from "../components/CartEmpty";
+import { selectFilter } from "../redux/slices/filter/selectors";
+import { selectPizzaData } from "../redux/slices/pizza/selectors";
+import { setCategoryId, setCurrentPage } from "../redux/slices/filter/slice";
+import { fetchPizzas } from "../redux/slices/pizza/asyncActions";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -43,7 +36,7 @@ const Home: React.FC = () => {
   const isMounted = React.useRef<boolean>(false);
 
   // extracting pizzas from Redux
-  const { items, status } = useSelector(selectPizzaData);
+  const { items, status } = useSelector(selectPizzaData
   const { categoryId, sort, currentPage, searchValue } =
     useSelector(selectFilter);
 
@@ -60,9 +53,15 @@ const Home: React.FC = () => {
   const getPizzas = async () => {
     setIsLoading(true);
 
-    const sortBy = sort?.sortProperty?.replace("-", "");
-    const order = sort?.sortProperty?.includes("-") ? "asc" : "desc";
-    const category = categoryId > 0 ? `category=${categoryId}` : "";
+    const sortBy = sort?.sortProperty?.sortProperty?.replace("-", "");
+    // const order = sort?.sortProperty?.includes("-") ? "asc" : "desc";
+    const order = sort?.sortProperty?.sortProperty?.includes("-")
+      ? "asc"
+      : "desc";
+    const category = categoryId > 0 ? `category=${categoryId}` : "1";
+    // const category = categoryId;
+    // console.log("category id: ", categoryId);
+    // console.log("category value: ", category);
     const search = searchValue ? `&search=${searchValue}` : "";
 
     // no need for the 'try/catch/finally/ block anymore as we're making a request to the API using 'fetchPizzas' that already handles all that logic
@@ -106,7 +105,9 @@ const Home: React.FC = () => {
       dispatch(
         setFilters({
           searchValue: params.search,
-          categoryId: Number(params.category),
+          categoryId: categoryId,
+          // categoryId: Number(params.category),
+          // categoryId: params.category,
           currentPage: Number(params.currentPage),
           sort: sort || sortList[0],
         })
@@ -141,7 +142,7 @@ const Home: React.FC = () => {
           chosenCategoryId={categoryId}
           onChangeCategory={onChangeCategory}
         />
-        <Sort />
+        <Sort sort={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "error" ? (
