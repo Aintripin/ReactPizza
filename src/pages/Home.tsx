@@ -15,7 +15,6 @@ import Pagination from "../components/Pagination";
 
 // import {selectFilter}
 
-
 import { SearchContext } from "../App";
 
 // ! types or whatever else is here:
@@ -26,7 +25,11 @@ import { AppDispatch } from "../redux/store";
 import CartEmpty from "../components/CartEmpty";
 import { selectFilter } from "../redux/slices/filter/selectors";
 import { selectPizzaData } from "../redux/slices/pizza/selectors";
-import { setCategoryId, setCurrentPage } from "../redux/slices/filter/slice";
+import {
+  setCategoryId,
+  setCurrentPage,
+  setFilters,
+} from "../redux/slices/filter/slice";
 import { fetchPizzas } from "../redux/slices/pizza/asyncActions";
 
 const Home: React.FC = () => {
@@ -36,7 +39,7 @@ const Home: React.FC = () => {
   const isMounted = React.useRef<boolean>(false);
 
   // extracting pizzas from Redux
-  const { items, status } = useSelector(selectPizzaData
+  const { items, status } = useSelector(selectPizzaData);
   const { categoryId, sort, currentPage, searchValue } =
     useSelector(selectFilter);
 
