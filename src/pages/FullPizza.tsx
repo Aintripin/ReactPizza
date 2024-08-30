@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import PizzaSkeleton from "../components/PizzaBlock/Skeleton";
-import styles from "./FullPizza.module.scss"; // Import the SCSS module
+import styles from "./FullPizza.module.scss";
 
 type Pizza = {
   id: number;

@@ -7,7 +7,7 @@ import { useRef, useCallback } from "react";
  * @param delay The delay in milliseconds after which the function will be called.
  * @returns A debounced version of the input function.
  */
-export function useDebounce<Func extends (...args: any[]) => void>(
+export function useDebounce<Func extends (...args: unknown[]) => void>(
   func: Func,
   delay = 1000
 ) {

@@ -1,13 +1,10 @@
 import React from "react";
-import { SearchContext } from "../../App";
 import styles from "./Search.module.scss";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDebounce } from "../../customHooks/useDebounce";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectSearchValue,
-  setSearchValue,
-} from "../../redux/slices/filterSlice";
+import { setSearchValue } from "../../redux/slices/filter/slice";
+import { selectSearchValue } from "../../redux/slices/filter/selectors";
 
 const Search = () => {
   const dispatch = useDispatch();

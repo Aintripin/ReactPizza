@@ -1,12 +1,9 @@
 import Home from "./pages/Home";
-// import NotFound from "./pages/NotFound";
-import { Outlet, Route, Routes } from "react-router-dom";
-// import Cart from "./pages/Cart";
+import { Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectSearchValue } from "./redux/slices/filterSlice";
-// import FullPizza from "./pages/FullPizza";
 import MainLayout from "./layouts/MainLayout";
 import React from "react";
+import { selectSearchValue } from "./redux/slices/filter/selectors";
 
 export type PizzaItem = {
   id: number;
@@ -24,8 +21,6 @@ const FullPizza = React.lazy(() => import("./pages/FullPizza"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 const App = () => {
-  // const [searchValue, setSearchValue] = useState("");
-
   const searchValue = useSelector(selectSearchValue);
 
   return (
