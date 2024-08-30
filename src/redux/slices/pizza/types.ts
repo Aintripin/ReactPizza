@@ -26,14 +26,15 @@ export enum Status {
 // };
 
 export type CartItem = {
-  id: number;
+  id: string;
   imageUrl: string;
   title: string;
   types: number[];
   sizes: number[];
   prices: Record<number, number>;
   category: number;
-  ratng: number;
+  rating: number;
+  description: string;
 };
 
 // export type CartItem = {

@@ -5,6 +5,12 @@ import MainLayout from "./layouts/MainLayout";
 import React from "react";
 import { selectSearchValue } from "./redux/slices/filter/selectors";
 
+// i18:
+import "./utils/i18n";
+import { useTranslation } from "react-i18next";
+
+const { t } = useTranslation();
+
 export type PizzaItem = {
   id: number;
   imageUrl: string;
@@ -26,7 +32,16 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route path="" element={<Home searchValue={searchValue} />} />
+        {/* <Route path="" element={<Home searchValue={searchValue} />} /> */}
+        <Route
+          path=""
+          element={
+            <div>
+              {t("welcomeMessage")}
+              <Home searchValue={searchValue} />
+            </div>
+          }
+        />
         <Route
           path="cart"
           element={

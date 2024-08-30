@@ -28,9 +28,22 @@ const filterSlice = createSlice({
       state.currentPage = action.payload;
     },
     // the value in the URL bar of the browser
+    // setFilters(state, action: PayloadAction<FilterSliceState>) {
+    //   if (Object.keys(action.payload).length) {
+    //     state.sort.sortProperty = action.payload.sort;
+    //     state.currentPage = Number(action.payload.currentPage);
+    //     state.categoryId = Number(action.payload.categoryId);
+    //   } else {
+    //     state.currentPage = 1;
+    //     state.categoryId = 0;
+    //     state.sort = {
+    //       name: SortPropertyEnum.RATING_DESC,
+    //     };
+    //   }
+    // },
     setFilters(state, action: PayloadAction<FilterSliceState>) {
       if (Object.keys(action.payload).length) {
-        state.sort.sortProperty = action.payload.sort;
+        state.sort.sortProperty = action.payload.sort.sortProperty;
         state.currentPage = Number(action.payload.currentPage);
         state.categoryId = Number(action.payload.categoryId);
       } else {
@@ -38,6 +51,7 @@ const filterSlice = createSlice({
         state.categoryId = 0;
         state.sort = {
           name: SortPropertyEnum.RATING_DESC,
+          sortProperty: SortPropertyEnum.RATING_DESC,
         };
       }
     },

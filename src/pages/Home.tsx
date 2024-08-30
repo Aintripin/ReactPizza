@@ -91,6 +91,8 @@ const Home: React.FC = () => {
         currentPage,
       });
 
+      console.log("query string: ", queryString);
+
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
