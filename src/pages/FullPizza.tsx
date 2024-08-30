@@ -100,6 +100,14 @@ const FullPizza: React.FC = () => {
               provident corrupti deleniti impedit quam enim sed deserunt, beatae
               quas omnis!
             </p>
+            <Link to="/">
+              <button
+                className="button button--outline button--add"
+                style={{ marginTop: "10px" }}
+              >
+                <span>Назад</span>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
