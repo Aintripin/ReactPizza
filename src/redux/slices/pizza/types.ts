@@ -13,39 +13,18 @@ export enum Status {
   ERROR = "error",
 }
 
-// export type CartItem = {
-//   id: number;
-//   title: string;
-//   price: number;
-//   imageUrl: string;
-//   types: string; // dough type: "тонкое" OR "традиционное"
-//   sizes: number;
-//   count: number;
-//   category: number;
-//   rating: string;
-// };
-
 export type CartItem = {
   id: string;
   imageUrl: string;
-  title: string;
-  types: number[];
+  title: Record<string, string>;
+  doughTypes: Record<string, string[]>;
   sizes: number[];
-  prices: Record<number, number>;
+  prices: Record<string, Record<number, number>>;
   category: number;
   rating: number;
-  description: string;
+  description: Record<string, string>;
+  count: number;
 };
-
-// export type CartItem = {
-//   id: number;
-//   title: string;
-//   price: number;
-//   imageUrl: string;
-//   type: string; // dough type: "тонкое" OR "традиционное"
-//   size: number;
-//   count: number;
-// };
 
 export interface CartState {
   items: CartItem[];

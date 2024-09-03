@@ -1,15 +1,8 @@
+// import Home from "./pages/Home";
 import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux";
 import MainLayout from "./layouts/MainLayout";
 import React from "react";
-import { selectSearchValue } from "./redux/slices/filter/selectors";
-
-// i18:
-import "./utils/i18n";
-import { useTranslation } from "react-i18next";
-
-const { t } = useTranslation();
 
 export type PizzaItem = {
   id: number;
@@ -27,8 +20,6 @@ const FullPizza = React.lazy(() => import("./pages/FullPizza"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 const App = () => {
-  const searchValue = useSelector(selectSearchValue);
-
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
@@ -37,8 +28,7 @@ const App = () => {
           path=""
           element={
             <div>
-              {t("welcomeMessage")}
-              <Home searchValue={searchValue} />
+              <Home />
             </div>
           }
         />
