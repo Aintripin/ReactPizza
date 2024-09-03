@@ -121,6 +121,26 @@ const filterSlice = createSlice({
     ) => {
       state.currency = action.payload;
     },
+    setFilters: (state, action: PayloadAction<Partial<FilterSliceState>>) => {
+      if (action.payload.categoryId !== undefined) {
+        state.categoryId = action.payload.categoryId;
+      }
+      if (action.payload.currentPage !== undefined) {
+        state.currentPage = action.payload.currentPage;
+      }
+      if (action.payload.searchValue !== undefined) {
+        state.searchValue = action.payload.searchValue;
+      }
+      if (action.payload.sort !== undefined) {
+        state.sort = action.payload.sort;
+      }
+      if (action.payload.language !== undefined) {
+        state.language = action.payload.language;
+      }
+      if (action.payload.currency !== undefined) {
+        state.currency = action.payload.currency;
+      }
+    },
   },
 });
 
@@ -131,6 +151,7 @@ export const {
   setSort,
   setLanguage,
   setCurrency,
+  setFilters,
 } = filterSlice.actions;
 
 export default filterSlice.reducer;

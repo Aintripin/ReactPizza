@@ -16,7 +16,8 @@ import { selectPizzaData } from "../redux/slices/pizza/selectors";
 import {
   setCategoryId,
   setCurrentPage,
-  setFilter,
+  setFilters,
+  //   setFilter,
 } from "../redux/slices/filter/slice";
 import { fetchPizzas } from "../redux/slices/pizza/asyncActions";
 import { CartItem, FetchPizzasParams } from "../redux/slices/pizza/types";
@@ -28,6 +29,8 @@ const Home: React.FC = () => {
   const isMounted = React.useRef<boolean>(false);
 
   const { items, status } = useSelector(selectPizzaData);
+  console.log("Redux state items:", items);
+
   const { categoryId, sort, currentPage, searchValue } =
     useSelector(selectFilter);
 
@@ -106,6 +109,7 @@ const Home: React.FC = () => {
     isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
+  console.log("pizza items, :", items);
   const pizzas = items.map((pizzaItem: CartItem) => (
     <PizzaBlock {...pizzaItem} key={pizzaItem.id} />
   ));
