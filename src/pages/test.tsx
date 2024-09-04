@@ -1,22 +1,8 @@
 import React from 'react'
 
-const TestDope = () => {
+const Test = () => {
     return (
-        <div>TestDope</div>
+        <div>Test</div>
     )
 }
-// export default test-dope
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Test

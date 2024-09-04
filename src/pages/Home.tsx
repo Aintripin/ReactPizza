@@ -1,146 +1,135 @@
-import React, { useState } from "react";
-import qs from "qs";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import qs from 'qs';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import Categories from "../components/Categories";
-import Sort from "../components/Sort";
-import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
-import PizzaSkeleton from "../components/PizzaBlock/Skeleton";
-import Pagination from "../components/Pagination";
+import Categories from '../components/Categories';
+import Sort, {sortList} from '../components/Sort';
+import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
+import PizzaSkeleton from '../components/PizzaBlock/Skeleton';
+import Pagination from '../components/Pagination';
+import { AppDispatch } from '../redux/store';
+import { selectFilter } from '../redux/slices/filter/selectors';
+import { selectPizzaData } from '../redux/slices/pizza/selectors';
+import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filter/slice';
+import { fetchPizzas } from '../redux/slices/pizza/asyncActions';
+import { CartItem, FetchPizzasParams } from '../redux/slices/pizza/types';
+import {SortPropertyEnum} from "../redux/slices/filter/types.ts";
 
-import { sortList } from "../components/Sort";
-import { AppDispatch } from "../redux/store";
-import { selectFilter } from "../redux/slices/filter/selectors";
-import { selectPizzaData } from "../redux/slices/pizza/selectors";
-import {
-  setCategoryId,
-  setCurrentPage,
-  setFilters,
-  //   setFilter,
-} from "../redux/slices/filter/slice";
-import { fetchPizzas } from "../redux/slices/pizza/asyncActions";
-import { CartItem, FetchPizzasParams } from "../redux/slices/pizza/types";
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const isSearch = React.useRef<boolean>(false);
-  const isMounted = React.useRef<boolean>(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const isSearch = React.useRef<boolean>(false);
+    const isMounted = React.useRef<boolean>(false);
 
-  const { items, status } = useSelector(selectPizzaData);
-  console.log("Redux state items:", items);
+    const { items, status } = useSelector(selectPizzaData);
+    const { categoryId, sort, currentPage, searchValue } = useSelector(selectFilter);
 
-  const { categoryId, sort, currentPage, searchValue } =
-    useSelector(selectFilter);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const onChangeCategory = React.useCallback(
-    (id: number) => {
-      dispatch(setCategoryId(id));
-    },
-    [dispatch]
-  );
-
-  const onChangePage = (pageNumber: number) => {
-    dispatch(setCurrentPage(pageNumber));
-  };
-
-  const getPizzas = async () => {
-    setIsLoading(true);
-
-    const sortBy = sort.sortProperty.replace("-", "");
-    const order = sort.sortProperty.includes("-") ? "asc" : "desc";
-    const category = categoryId > 0 ? `category=${categoryId}` : "";
-    const search = searchValue ? `&search=${searchValue}` : "";
-
-    dispatch(
-      fetchPizzas({
-        sortBy,
-        order,
-        category,
-        search,
-        currentPage,
-      })
+    const onChangeCategory = React.useCallback(
+        (id: number) => {
+            dispatch(setCategoryId(id));
+        },
+        [dispatch]
     );
-  };
 
-  React.useEffect(() => {
-    if (isMounted.current) {
-      const queryString = qs.stringify({
-        sortPropery: sort.sortProperty,
-        categoryId,
-        currentPage,
-      });
+    const onChangePage = (pageNumber: number) => {
+        dispatch(setCurrentPage(pageNumber));
+    };
 
-      navigate(`?${queryString}`);
-    }
-    isMounted.current = true;
-  }, [categoryId, sort.sortProperty, currentPage]);
+    const getPizzas = async () => {
+        setIsLoading(true);
 
-  React.useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(
-        window.location.search.substring(1)
-      ) as unknown as FetchPizzasParams;
+        const sortBy: SortPropertyEnum = sort.sortProperty;
+        const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
+        const category = categoryId > 0 ? `category=${categoryId}` : '';
+        const search = searchValue ? `&search=${searchValue}` : '';
 
-      const sort = sortList.find((obj) => obj.sortProperty === params.sortBy);
+        dispatch(
+            fetchPizzas({
+                sortBy,
+                order,
+                category,
+                search,
+                currentPage,
+            })
+        );
+    };
 
-      dispatch(
-        setFilters({
-          searchValue: params.search || "",
-          categoryId: params.category ? Number(params.category) : 0,
-          currentPage: Number(params.currentPage) || 1,
-          sort: sort || sortList[0],
-        })
-      );
-      isSearch.current = true;
-    }
-  }, [dispatch]);
+    React.useEffect(() => {
+        if (isMounted.current) {
+            const queryString = qs.stringify({
+                sortProperty: sort.sortProperty,
+                categoryId,
+                currentPage,
+            });
 
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
+            navigate(`?${queryString}`);
+        }
+        isMounted.current = true;
+    }, [categoryId, sort.sortProperty, currentPage]);
 
-    if (!isSearch.current) {
-      getPizzas();
-    }
+    React.useEffect(() => {
+        if (window.location.search) {
+            const params = qs.parse(window.location.search.substring(1)) as unknown as FetchPizzasParams;
 
-    isSearch.current = false;
-  }, [categoryId, sort.sortProperty, searchValue, currentPage]);
+            const sort = sortList.find((obj) => obj.sortProperty === params.sortBy);
 
-  console.log("pizza items, :", items);
-  const pizzas = items.map((pizzaItem: CartItem) => (
-    <PizzaBlock {...pizzaItem} key={pizzaItem.id} />
-  ));
+            dispatch(
+                setFilters({
+                    searchValue: params.search || '',
+                    categoryId: params.category ? Number(params.category) : 0,
+                    currentPage: Number(params.currentPage) || 1,
+                    sort: sort || sortList[0],
+                })
+            );
+            isSearch.current = true;
+        }
+    }, [dispatch]);
 
-  const skeletonPlaceholders = [...new Array(8)].map((_, idx) => (
-    <PizzaSkeleton key={idx} />
-  ));
+    React.useEffect(() => {
+        window.scrollTo(0, 0);
 
-  return (
-    <div className="container">
-      <div className="content__top">
-        <Categories
-          chosenCategoryId={categoryId}
-          onChangeCategory={onChangeCategory}
-        />
-        <Sort sort={sort} />
-      </div>
-      <h2 className="content__title">Все пиццы</h2>
-      {status === "error" ? (
-        <div className="content__error-info">
-          <h2>Произошла Ошибка</h2>
-          <p>Не удалось получить пиццы. Попробуйте повторить попытку позже</p>
+        if (!isSearch.current) {
+            getPizzas();
+        }
+
+        isSearch.current = false;
+    }, [categoryId, sort.sortProperty, searchValue, currentPage]);
+
+    const pizzas = items.map((pizzaItem: CartItem) => (
+        <PizzaBlock {...pizzaItem} key={pizzaItem.id} />
+    ));
+
+    const skeletonPlaceholders = [...new Array(8)].map((_, idx) => (
+        <PizzaSkeleton key={idx} />
+    ));
+
+    return (
+        <div className="container">
+            <div className="content__top">
+                <Categories
+                    chosenCategoryId={categoryId}
+                    onChangeCategory={onChangeCategory}
+                />
+                <Sort sort={sort} />
+            </div>
+            <h2 className="content__title">Все пиццы</h2>
+            {status === 'error' ? (
+                <div className="content__error-info">
+                    <h2>Произошла Ошибка</h2>
+                    <p>Не удалось получить пиццы. Попробуйте повторить попытку позже</p>
+                </div>
+            ) : (
+                <div className="content__items">
+                    {status === 'loading' ? skeletonPlaceholders : pizzas}
+                </div>
+            )}
+            <Pagination onChangePage={onChangePage} currentPage={currentPage} />
         </div>
-      ) : (
-        <div className="content__items">
-          {status === "loading" ? skeletonPlaceholders : pizzas}
-        </div>
-      )}
-      <Pagination onChangePage={onChangePage} currentPage={currentPage} />
-    </div>
-  );
+    );
 };
 
 export default Home;

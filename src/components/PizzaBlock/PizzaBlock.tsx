@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { PizzaItem } from "../../App";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import PlusIcon from "../../SVGs/PlusIcon";
@@ -7,35 +6,30 @@ import { addItem } from "../../redux/slices/cart/slice";
 import { selectCartItemById } from "../../redux/slices/cart/selectors";
 import { CartItem } from "../../redux/slices/pizza/types";
 
-const typeNames = ["тонкое", "традиционное"];
-const sizeNames = [26, 30, 40];
 
-// interface PizzaBlockProps
-//   extends Omit<PizzaItem, "id" | "title">,
-//     Omit<React.HTMLAttributes<HTMLDivElement>, "id"> {
-//   title: string;
-//   id: number;
-// }
 
 interface PizzaBlockProps extends CartItem {}
 
 const PizzaBlock: React.FC<PizzaBlockProps> = ({
-  // id,
-  // title,
-  // price,
-  // imageUrl,
-  // sizes,
-  // types,
   id,
   imageUrl,
   title,
-  types,
+                                                 doughTypes,
   sizes,
   prices,
   category,
   rating,
   description,
 }: PizzaBlockProps) => {
+
+  // ! temporary stuff that's finna get removed
+  const selectedLanguage = "ru"
+  const selectedCurrency = "rubles"; // or "dollars" / "euros"
+  const selectedSize = "26"; // or "30" / "40"
+  const price = prices[selectedCurrency]?.[selectedSize];
+  // !
+
+
   const dispatch = useDispatch();
   const cartItem = useSelector(selectCartItemById(id));
 
@@ -46,25 +40,27 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
 
   const onClickAdd = () => {
     const item = {
-      // id,
-      // title,
-      // price,
-      // imageUrl,
-      // type: typeNames[doughType],
-      // size: sizeNames[activeSize],
-      // count: 1,
       id,
       imageUrl,
       title,
-      types,
+      doughTypes,
       sizes,
       prices,
       category,
       rating,
       description,
+      count: 1
     };
-    dispatch(addItem(item));
+    const selectedCurrency = "rubles"
+
+    // dispatch(addItem(item, currency: selectedCurrency));
+
+    dispatch(addItem({ item, currency: selectedCurrency }));
+
   };
+
+
+
 
   return (
     <div className="pizza-block-wrapper">
@@ -73,32 +69,44 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
           <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
 
           <h4 className="pizza-block__title">
-            {title ? title : "Чизбургер-пицца"}
+            {/*{title ? title : "Чизбургер-пицца"}*/}
+            {title[selectedLanguage] ? title[selectedLanguage] : "Чизбургер-пицца"}
           </h4>
         </Link>
         <div className="pizza-block__selector">
+          {/*<ul>*/}
+          {/*  {doughTypes.map((type, idx) => (*/}
+          {/*    <li*/}
+          {/*      key={idx}*/}
+          {/*      className={doughType === idx ? "active" : ""}*/}
+          {/*      onClick={() => setDoughType(idx)}*/}
+          {/*    >*/}
+          {/*      {type === 0 ? "тонкое" : "традиционное"}*/}
+          {/*    </li>*/}
+          {/*  ))}*/}
+          {/*</ul>*/}
           <ul>
-            {types.map((type, idx) => (
-              <li
-                key={idx}
-                className={doughType === idx ? "active" : ""}
-                onClick={() => setDoughType(idx)}
-              >
-                {type === 0 ? "тонкое" : "традиционное"}
-              </li>
+            {doughTypes[selectedLanguage].map((type, idx) => (
+                <li
+                    key={idx}
+                    className={doughType === idx ? "active" : ""}
+                    onClick={() => setDoughType(idx)}
+                >
+                  {type}
+                </li>
             ))}
           </ul>
           <ul>
             {sizes.map((size, idx) => (
-              <li
-                key={idx}
-                className={activeSize === idx ? "active" : ""}
-                onClick={() => {
-                  setActiveSize(idx);
-                }}
-              >
-                {size} см.
-              </li>
+                <li
+                    key={idx}
+                    className={activeSize === idx ? "active" : ""}
+                    onClick={() => {
+                      setActiveSize(idx);
+                    }}
+                >
+                  {size} см.
+                </li>
             ))}
           </ul>
         </div>
@@ -107,7 +115,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
             от {price ? `${price} ₽` : "395 ₽"}
           </div>
           <button
-            className="button button--outline button--add"
+              className="button button--outline button--add"
             onClick={onClickAdd}
           >
             <PlusIcon />
